@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MLB - Lab Booking System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --whatsapp: #25d366;
+        }
+        body {
+            background-color: #f3f4f6;
+            font-family: 'Inter', sans-serif;
+        }
+        .form-card {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+        .checkbox-group {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .btn-whatsapp {
+            background-color: var(--whatsapp);
+            transition: all 0.3s ease;
+        }
+        .btn-whatsapp:hover {
+            background-color: #128c7e;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-2xl mx-auto">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-blue-800">My Lab Buddy (MLB)</h1>
+            <p class="text-gray-600">Fast & Reliable Lab Booking Portal</p>
+        </header>
+
+        <div class="form-card p-6 md:p-8">
+            <form id="bookingForm" class="space-y-6">
+                <!-- Patient Info Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Patient's Name</label>
+                        <input type="text" id="patientName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" placeholder="John Doe">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Age</label>
+                        <input type="number" id="age" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" placeholder="25">
+                    </div>
+                </div>
+
+                <!-- Lab & Date Selection -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Select Lab</label>
+                        <select id="labName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border">
+                            <option value="PRL">PRL</option>
+                            <option value="Healthians">Healthians</option>
+                            <option value="HOD">HOD</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Booking Date</label>
+                        <input type="date" id="bookingDate" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border">
+                    </div>
+                </div>
+
+                <!-- Test Selection -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Select Tests</label>
+                    <div class="checkbox-group grid grid-cols-1 sm:grid-cols-2 gap-2 border p-3 rounded-md">
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" class="test-item" value="CBC" data-price="350"> 
+                            <span>CBC (₹350)</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" class="test-item" value="KFT" data-price="850"> 
+                            <span>KFT (₹850)</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" class="test-item" value="LFT" data-price="750"> 
+                            <span>LFT (₹750)</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" class="test-item" value="Thyroid" data-price="500"> 
+                            <span>Thyroid (₹500)</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" class="test-item" value="HbA1c" data-price="600"> 
+                            <span>HbA1c (₹600)</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" class="test-item" value="Lipid Profile" data-price="900"> 
+                            <span>Lipid Profile (₹900)</span>
+                        </label>
+                    </div>
+                    <div class="mt-2 text-right">
+                        <span class="text-lg font-bold text-blue-600">Total: ₹<span id="totalAmount">0</span></span>
+                    </div>
+                </div>
+
+                <!-- Options Row -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Payment Mode</label>
+                        <select id="paymentMode" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border">
+                            <option value="Cash">Cash</option>
+                            <option value="Online">Online</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Collection Type</label>
+                        <select id="collectionType" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border">
+                            <option value="Lab Visit">Lab Visit</option>
+                            <option value="Home Collection">Home Collection</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Time Slots -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Select Time Slot</label>
+                    <select id="timeSlot" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border">
+                        <!-- Generated by JS -->
+                    </select>
+                </div>
+
+                <!-- Note -->
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                    <div class="flex">
+                        <div class="ml-3">
+                            <p class="text-sm text-yellow-700 font-medium">
+                                Note: Show your doctor's prescription at the time of booking.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="button" id="submitBtn" class="w-full btn-whatsapp text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center space-x-2 shadow-lg">
+                    <span>Send Booking via WhatsApp</span>
+                </button>
+            </form>
+        </div>
+
+        <footer class="mt-8 text-center text-gray-500 text-sm">
+            &copy; 2024 My Lab Buddy. All Rights Reserved.
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const WHATSAPP_NUMBER = '8448879897';
+            const testCheckboxes = document.querySelectorAll('.test-item');
+            const totalDisplay = document.getElementById('totalAmount');
+            const timeSlotSelect = document.getElementById('timeSlot');
+            const submitBtn = document.getElementById('submitBtn');
+
+            // 1. Generate 9 Digit Booking ID
+            function generateBookingID() {
+                return Math.floor(100000000 + Math.random() * 900000000);
+            }
+
+            // 2. Generate Time Slots 8 AM to 6 PM (30 min intervals)
+            function generateTimeSlots() {
+                const slots = [];
+                for (let hour = 8; hour < 18; hour++) {
+                    const h = hour > 12 ? hour - 12 : hour;
+                    const ampm = hour >= 12 ? 'PM' : 'AM';
+                    slots.push(`${h}:00 ${ampm}`);
+                    slots.push(`${h}:30 ${ampm}`);
+                }
+                slots.push('6:00 PM');
+                
+                slots.forEach(slot => {
+                    const option = document.createElement('option');
+                    option.value = slot;
+                    option.textContent = slot;
+                    timeSlotSelect.appendChild(option);
+                });
+            }
+
+            // 3. Update Total Amount
+            function updateTotal() {
+                let total = 0;
+                testCheckboxes.forEach(cb => {
+                    if (cb.checked) total += parseInt(cb.dataset.price);
+                });
+                totalDisplay.textContent = total;
+            }
+
+            testCheckboxes.forEach(cb => {
+                cb.addEventListener('change', updateTotal);
+            });
+
+            // 4. Handle Submit
+            submitBtn.addEventListener('click', function() {
+                const name = document.getElementById('patientName').value.trim();
+                const age = document.getElementById('age').value.trim();
+                const lab = document.getElementById('labName').value;
+                const date = document.getElementById('bookingDate').value;
+                const payment = document.getElementById('paymentMode').value;
+                const collection = document.getElementById('collectionType').value;
+                const slot = timeSlotSelect.value;
+                const total = totalDisplay.textContent;
+
+                const selectedTests = Array.from(testCheckboxes)
+                    .filter(cb => cb.checked)
+                    .map(cb => cb.value);
+
+                if (!name || !age || !date || selectedTests.length === 0) {
+                    alert('Please fill in all details and select at least one test.');
+                    return;
+                }
+
+                const bookingID = generateBookingID();
+                const testList = selectedTests.join(', ');
+
+                // Construct WhatsApp Message
+                const message = `Dear ${name}
+
+Booking: ${bookingID}
+Lab Name: ${lab}
+Date: ${date}
+
+Patient's Name: ${name}
+Age: ${age}
+Multiple tests are selected at the same time: ${testList}
+
+Payment Mode: ${payment}
+Amount: ₹${total}
+Collection Type: ${collection}
+Time Slot: ${slot}
+
+Special Note: Show your doctor's prescription at the time of booking
+
+Best Regards
+My Lab Buddy (MLB)`;
+
+                // Encode for URL
+                const encodedMsg = encodeURIComponent(message);
+                const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMsg}`;
+
+                // Open WhatsApp
+                window.open(whatsappUrl, '_blank');
+            });
+
+            // Initialize
+            generateTimeSlots();
+            // Set default date to today
+            document.getElementById('bookingDate').valueAsDate = new Date();
+        });
+    </script>
+</body>
+</html>
